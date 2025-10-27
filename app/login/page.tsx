@@ -4,6 +4,9 @@ import { useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
+import { ConnectButton } from '@rainbow-me/rainbowkit'
+import { useAccount } from 'wagmi'
+import { useEffect } from 'react'
 import styles from './login.module.css'
 
 export default function LoginPage() {
@@ -12,7 +15,19 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
   const [isSignUp, setIsSignUp] = useState(false)
+  const [loginMethod, setLoginMethod] = useState<'traditional' | 'wallet' | null>(null)
   const router = useRouter()
+  const { address, isConnected } = useAccount()
+
+  // 钱包连接后自动跳转
+  useEffect(() => {
+    if (isConnected && address && loginMethod === 'wallet') {
+      setMessage(`钱包已连接：${address.slice(0, 6)}...${address.slice(-4)}`)
+      setTimeout(() => {
+        router.push('/dashboard')
+      }, 1000)
+    }
+  }, [isConnected, address, loginMethod, router])
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -70,9 +85,78 @@ export default function LoginPage() {
     }
   }
 
+  // 如果还没选择登录方式，显示选择界面
+  if (loginMethod === null) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.card}>
+          <h1 className={styles.title}>欢迎回来</h1>
+          <p className={styles.subtitle}>选择登录方式</p>
+          
+          <div className={styles.loginMethodSelection}>
+            <button
+              onClick={() => setLoginMethod('traditional')}
+              className={styles.methodButton}
+            >
+              <div className={styles.methodIcon}>📧</div>
+              <h3>传统登录</h3>
+              <p>使用邮箱密码或社交账号登录</p>
+            </button>
+
+            <button
+              onClick={() => setLoginMethod('wallet')}
+              className={styles.methodButton}
+            >
+              <div className={styles.methodIcon}>👛</div>
+              <h3>Web3 钱包登录</h3>
+              <p>连接 MetaMask 等钱包登录</p>
+            </button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // 如果选择了钱包登录
+  if (loginMethod === 'wallet') {
+    return (
+      <div className={styles.container}>
+        <div className={styles.card}>
+          <button 
+            onClick={() => setLoginMethod(null)}
+            className={styles.backButton}
+          >
+            ← 返回
+          </button>
+          
+          <h1 className={styles.title}>Web3 钱包登录</h1>
+          <p className={styles.subtitle}>连接您的钱包以继续</p>
+
+          <div className={styles.walletConnectSection}>
+            <ConnectButton />
+          </div>
+
+          {message && (
+            <div className={styles.success}>
+              {message}
+            </div>
+          )}
+        </div>
+      </div>
+    )
+  }
+
+  // 传统登录方式
   return (
     <div className={styles.container}>
       <div className={styles.card}>
+        <button 
+          onClick={() => setLoginMethod(null)}
+          className={styles.backButton}
+        >
+          ← 返回
+        </button>
+        
         <h1 className={styles.title}>
           {isSignUp ? '创建账户' : '欢迎回来'}
         </h1>

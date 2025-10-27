@@ -1,9 +1,10 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import { Providers } from './providers'
 
 export const metadata: Metadata = {
-  title: 'Supabase 用户登录',
-  description: 'Next.js + Supabase 用户认证示例',
+  title: 'Supabase 用户登录 + Web3 钱包',
+  description: 'Next.js + Supabase 用户认证示例，支持邮箱登录和 Web3 钱包登录',
 }
 
 export default function RootLayout({
@@ -13,7 +14,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="zh">
-      <body>{children}</body>
+      <body>
+        <Providers>
+          {children}
+        </Providers>
+      </body>
     </html>
   )
 }

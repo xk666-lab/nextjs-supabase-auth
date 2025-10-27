@@ -4,12 +4,15 @@ import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
 import { User } from '@supabase/supabase-js'
+import { useAccount, useDisconnect } from 'wagmi'
 import styles from './dashboard.module.css'
 
 export default function DashboardPage() {
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
   const router = useRouter()
+  const { address, isConnected } = useAccount()
+  const { disconnect } = useDisconnect()
 
   useEffect(() => {
     checkUser()
@@ -18,16 +21,24 @@ export default function DashboardPage() {
   const checkUser = async () => {
     const { data: { session } } = await supabase.auth.getSession()
     
-    if (!session) {
+    // 如果没有 Supabase 会话，检查是否有钱包连接
+    if (!session && !isConnected) {
       router.push('/login')
-    } else {
+    } else if (session) {
       setUser(session.user)
     }
     setLoading(false)
   }
 
   const handleLogout = async () => {
+    // 登出 Supabase
     await supabase.auth.signOut()
+    
+    // 如果有钱包连接，断开连接
+    if (isConnected) {
+      disconnect()
+    }
+    
     router.push('/login')
   }
 
@@ -39,7 +50,7 @@ export default function DashboardPage() {
     )
   }
 
-  if (!user) {
+  if (!user && !isConnected) {
     return null
   }
 
@@ -56,20 +67,50 @@ export default function DashboardPage() {
         <div className={styles.content}>
           <div className={styles.infoSection}>
             <h2>用户信息</h2>
-            <div className={styles.infoItem}>
-              <span className={styles.label}>邮箱:</span>
-              <span className={styles.value}>{user.email}</span>
-            </div>
-            <div className={styles.infoItem}>
-              <span className={styles.label}>用户ID:</span>
-              <span className={styles.value}>{user.id}</span>
-            </div>
-            <div className={styles.infoItem}>
-              <span className={styles.label}>创建时间:</span>
-              <span className={styles.value}>
-                {new Date(user.created_at).toLocaleString('zh-CN')}
-              </span>
-            </div>
+            
+            {/* 如果是钱包登录 */}
+            {isConnected && !user && (
+              <>
+                <div className={styles.infoItem}>
+                  <span className={styles.label}>登录方式:</span>
+                  <span className={styles.value}>👛 Web3 钱包</span>
+                </div>
+                <div className={styles.infoItem}>
+                  <span className={styles.label}>钱包地址:</span>
+                  <span className={styles.value}>{address}</span>
+                </div>
+                <div className={styles.infoItem}>
+                  <span className={styles.label}>简短地址:</span>
+                  <span className={styles.value}>
+                    {address ? `${address.slice(0, 6)}...${address.slice(-4)}` : ''}
+                  </span>
+                </div>
+              </>
+            )}
+            
+            {/* 如果是传统登录 */}
+            {user && (
+              <>
+                <div className={styles.infoItem}>
+                  <span className={styles.label}>登录方式:</span>
+                  <span className={styles.value}>📧 传统登录</span>
+                </div>
+                <div className={styles.infoItem}>
+                  <span className={styles.label}>邮箱:</span>
+                  <span className={styles.value}>{user.email}</span>
+                </div>
+                <div className={styles.infoItem}>
+                  <span className={styles.label}>用户ID:</span>
+                  <span className={styles.value}>{user.id}</span>
+                </div>
+                <div className={styles.infoItem}>
+                  <span className={styles.label}>创建时间:</span>
+                  <span className={styles.value}>
+                    {new Date(user.created_at).toLocaleString('zh-CN')}
+                  </span>
+                </div>
+              </>
+            )}
           </div>
 
           <div className={styles.successMessage}>
