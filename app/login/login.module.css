@@ -1,0 +1,242 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  padding: 50px 40px;
+  width: 100%;
+  max-width: 520px;
+}
+
+.title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #000000;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.subtitle {
+  font-size: 16px;
+  font-weight: 300;
+  color: #666666;
+  margin-bottom: 35px;
+  text-align: center;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.inputGroup label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #4a5568;
+}
+
+.inputGroup input {
+  padding: 12px 16px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: all 0.2s;
+}
+
+.inputGroup input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.inputGroup input:disabled {
+  background-color: #f7fafc;
+  cursor: not-allowed;
+}
+
+.button {
+  padding: 14px 24px;
+  background: linear-gradient(to right, #667eea, #764ba2);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  margin-top: 10px;
+}
+
+.button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.success {
+  padding: 12px;
+  background-color: #c6f6d5;
+  border: 1px solid #9ae6b4;
+  color: #22543d;
+  border-radius: 8px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.error {
+  padding: 12px;
+  background-color: #fed7d7;
+  border: 1px solid #fc8181;
+  color: #742a2a;
+  border-radius: 8px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.toggle {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.toggleButton {
+  background: none;
+  border: none;
+  color: #667eea;
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 8px;
+}
+
+.toggleButton:hover {
+  color: #764ba2;
+}
+
+/* 社交登录按钮样式 - 基于 Figma 设计 */
+.socialButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 25px;
+}
+
+.socialButton {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 20px;
+  padding: 18px 24px;
+  border: none;
+  border-radius: 21px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.07);
+  width: 100%;
+}
+
+.socialButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.socialButton:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.socialButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Facebook 按钮 - 来自 Figma 设计 */
+.socialButton[data-provider="facebook"] {
+  background: #1877F2;
+  color: #FFFFFF;
+}
+
+.socialButton[data-provider="facebook"]:hover:not(:disabled) {
+  background: #0e68d9;
+}
+
+/* Google 按钮 - 来自 Figma 设计 */
+.socialButton[data-provider="google"] {
+  background: #FFFFFF;
+  color: rgba(0, 0, 0, 0.54);
+  border: 1px solid #e0e0e0;
+}
+
+.socialButton[data-provider="google"]:hover:not(:disabled) {
+  background: #f8f9fa;
+  border-color: #d0d0d0;
+}
+
+/* Apple 按钮 - 来自 Figma 设计 */
+.socialButton[data-provider="apple"] {
+  background: #000000;
+  color: #FFFFFF;
+}
+
+.socialButton[data-provider="apple"]:hover:not(:disabled) {
+  background: #1a1a1a;
+}
+
+.socialIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.socialIcon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* 分隔线 */
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 30px 0 25px;
+  color: #999999;
+  font-size: 14px;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.divider span {
+  padding: 0 15px;
+}
+
